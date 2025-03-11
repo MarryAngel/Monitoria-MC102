@@ -1,3 +1,5 @@
+# https://www.ime.usp.br/~pf/dicios/ -> lista de palavras usado
+
 import pygame
 import sys
 import random
