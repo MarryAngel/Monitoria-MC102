@@ -3,6 +3,7 @@
 import pygame
 import sys
 import random
+from player import pensar, chutar_palavra, retorno
 
 # Configurações
 WIDTH, HEIGHT = 400, 500
@@ -12,6 +13,8 @@ CELL_SIZE = 50
 MARGIN = 10
 FONT_SIZE = 40
 camera_y = 0
+ganhei = False
+n_chutes = 0
 
 # Cores
 WHITE = (255, 255, 255)
@@ -33,6 +36,7 @@ with open("palavras.txt", "r", encoding="utf-8") as file:
 
 # Escolher uma palavra aleatória
 correct_word = random.choice(words)
+#correct_word = "ABACO"
 print(correct_word)
 
 grid = [["" for _ in range(GRID_SIZE)] for _ in range(ATTEMPTS)]
@@ -57,13 +61,15 @@ def draw_grid():
 
 
 def check_word():
-    global current_row, ATTEMPTS
+    global current_row, ATTEMPTS, ganhei, n_chutes
+    n_chutes += 1
     guess = "".join(grid[current_row])
     if len(guess) == GRID_SIZE and guess in words:
         if guess == correct_word:
             for i in range(GRID_SIZE):
                 colors[current_row][i] = GREEN
-            print("Você venceu!")
+            print(f"Você venceu em {n_chutes} chutes!")
+            ganhei = True
         else:
             correct_letters = list(correct_word)
             guessed_letters = list(guess)
@@ -91,14 +97,29 @@ def check_word():
         
         ATTEMPTS += 1
 
+        
+
+def automatizar():
+    pensar()
+    chute = chutar_palavra().upper()
+    for i in range(GRID_SIZE):
+        if len(chute) <= i:
+            break
+        grid[current_row][i] = chute[i]
+    check_word()
+    retorno(colors[current_row])
 
 draw_grid()
 
 running = True
+clock = pygame.time.Clock()
 while running:
+    clock.tick(60)  # rodar a 60 FPS
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        elif ganhei:
+            continue
         elif event.type == pygame.KEYDOWN:
             if pygame.K_a <= event.key <= pygame.K_z and current_col < GRID_SIZE:
                 grid[current_row][current_col] = chr(event.key).upper()
@@ -126,8 +147,14 @@ while running:
             elif event.key == pygame.K_DOWN:
                 if ATTEMPTS + camera_y / (CELL_SIZE + MARGIN) > 7 :
                     camera_y = max(camera_y -(CELL_SIZE + MARGIN), -(CELL_SIZE + MARGIN) * (ATTEMPTS))
-                
-    draw_grid()
+    
+    if not ganhei:
+        automatizar()
+        
+        draw_grid()
+    
+    if ganhei:
+        draw_grid() # e adiciona o da vitória
 
 pygame.quit()
 sys.exit()
