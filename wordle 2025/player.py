@@ -14,8 +14,8 @@ def pensar():
     global chutar, words
     if words is None:
         with open("palavras.txt", "r", encoding="utf-8") as file:
-            words = [line.strip().upper() for line in file.readlines()]
-            #words = ["abac"]
+            words = [line.strip().upper() for line in file.readlines() if len(line.strip()) == 5]
+            #words = ["abaco"]
 
     # Escolher uma palavra aleatória
     chutar.append(random.choice(words))
@@ -43,4 +43,5 @@ def retorno(resposta):
     
     """
     global respostas
+    print(resposta)
     respostas.append(resposta)

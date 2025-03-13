@@ -17,12 +17,12 @@ ganhei = False
 n_chutes = 0
 
 # Cores
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-GRAY = (200, 200, 200)
-GREEN = (0, 200, 0)
-YELLOW = (200, 200, 0)
-DARK_GRAY = (50, 50, 50)
+WHITE = (250, 250, 255)
+BLACK = (0,0,0)
+GRAY = (110, 92, 98)
+GREEN = (58, 163, 148)
+YELLOW = (211, 173, 105)
+DARK_GRAY = (49, 42, 44)
 
 # Inicialização do Pygame
 pygame.init()
@@ -41,7 +41,6 @@ print(correct_word)
 
 grid = [["" for _ in range(GRID_SIZE)] for _ in range(ATTEMPTS)]
 colors = [[GRAY for _ in range(GRID_SIZE)] for _ in range(ATTEMPTS)]
-print(f"{colors=}")
 current_row, current_col = 0, 0
 
 
@@ -53,7 +52,7 @@ def draw_grid():
             pygame.draw.rect(screen, colors[row][col], (x, y, CELL_SIZE, CELL_SIZE))
             pygame.draw.rect(screen, BLACK, (x, y, CELL_SIZE, CELL_SIZE), 2)
             if grid[row][col]:
-                text = font.render(grid[row][col], True, BLACK)
+                text = font.render(grid[row][col], True, WHITE)
                 screen.blit(text, (x + 15, y + 5))
             if row == current_row and col == current_col:
                 pygame.draw.line(screen, BLACK, (x + 5, y + CELL_SIZE - 5), (x + CELL_SIZE - 5, y + CELL_SIZE - 5), 2)
@@ -107,7 +106,10 @@ def automatizar():
             break
         grid[current_row][i] = chute[i]
     check_word()
-    retorno(colors[current_row])
+    if len(colors) > 1:
+        retorno(colors[1])
+    else:
+        retorno(colors[0])
 
 draw_grid()
 
@@ -149,7 +151,7 @@ while running:
                     camera_y = max(camera_y -(CELL_SIZE + MARGIN), -(CELL_SIZE + MARGIN) * (ATTEMPTS))
     
     if not ganhei:
-        automatizar()
+        #automatizar()
         
         draw_grid()
     
